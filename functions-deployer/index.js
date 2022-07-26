@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { createClient } from '@redis/client';
-import { join } from 'path';
+import { resolve } from 'path';
 import * as rollup from 'rollup';
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
 
@@ -15,7 +15,7 @@ await new Command()
 
     return (watch ? watchAndDeploy : buildAndDeploy)(client, {
       input: {
-        file: join(process.cwd(), filename)
+        file: resolve(process.cwd(), filename)
       },
       plugins: [
         preserveShebangs()
