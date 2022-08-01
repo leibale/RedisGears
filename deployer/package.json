@@ -1,8 +1,9 @@
 {
-  "name": "@redis/gears-functions-loader",
-  "version": "1.0.0",
+  "name": "@redis/gears-deployer",
+  "version": "0.0.1",
   "description": "",
   "type": "module",
+  "main": "./index.js",
   "bin": "./index.js",
   "license": "ISC",
   "dependencies": {
@@ -11,7 +12,7 @@
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.3.0",
     "commander": "9.4.0",
-    "rollup": "2.77.1",
+    "rollup": "2.77.2",
     "rollup-plugin-preserve-shebangs": "0.2.0"
   }
 }

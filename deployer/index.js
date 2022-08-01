@@ -6,8 +6,9 @@ import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import wasm from '@rollup/plugin-wasm';
 
-await new Command()
+await new Command('@redis/gears-deployer')
   .argument('<filename>')
   .option('-r, --redis')
   .option('-w, --watch')
@@ -24,7 +25,8 @@ await new Command()
         preserveShebangs(),
         nodeResolve(),
         commonjs(),
-        json()
+        json(),
+        wasm()
       ]
     });
   })
@@ -39,12 +41,14 @@ async function buildAndDeploy(client, rollupOptions) {
 }
 
 async function watchAndDeploy(client, rollupOptions) {
-  (await rollup.watch({
+  const watcher = await rollup.watch({
     ...rollupOptions,
     watch: {
       skipWrite: true
     }
-  })).on('event', async ({ code, error, result }) => {
+  });
+
+  for await (const { code, error, result } of watcher.on('event')) {
     switch (code) {
       case 'ERROR':
         console.error('Rollup bundle error', error);
@@ -54,16 +58,12 @@ async function watchAndDeploy(client, rollupOptions) {
         await deploy(client, result);
         break;
     }
-  });
+  }
 }
 
 async function deploy(client, result) {
-
   try {
-    const { output: [{ code }] } = await result.generate({
-      format: 'es'
-    });
-
+    const { output: [{ code }] } = await result.generate({ format: 'es' });
     await client.sendCommand(['RG.FUNCTION', 'LOAD', 'UPGRADE', code]);
     console.log('Deployed! :)');
   } catch (err) {

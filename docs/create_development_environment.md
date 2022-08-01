@@ -108,7 +108,7 @@ We can use npm scripts section to achieve an easy build and deploy commands, cha
 
 ```json
 "scripts": {
-  "deploy": "@redis/gears-functions-deployer ./src/index.js"
+  "deploy": "@redis/gears-deployer ./src/index.js"
 }
 ```
 
@@ -118,7 +118,7 @@ Now we can run `npm run deploy` to bundle and deploy our library to a local Redi
 npm run deploy
 ```
 
-## `@redis/gears-functions-deployer` options
+## `@redis/gears-deployer` options
 
 * `-w`/`--watch` - Watch mode
 * `-r`/`--redis` - Redis connection string (i.e. `redis://username:password@host:port`)
